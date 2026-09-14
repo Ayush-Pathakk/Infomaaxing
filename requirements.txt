@@ -1,0 +1,4 @@
+feedparser
+groq
+tweepy
+python-dotenv
