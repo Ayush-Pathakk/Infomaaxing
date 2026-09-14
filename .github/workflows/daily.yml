@@ -5,6 +5,9 @@ on:
     - cron: '30 3 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   send:
     runs-on: ubuntu-22.04
@@ -18,16 +21,6 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Test Groq connectivity
-        run: |
-          echo "=== DNS ==="
-          nslookup api.groq.com || true
-          echo "=== CURL ==="
-          curl -sS -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" \
-            --max-time 15 \
-            https://api.groq.com/openai/v1/models \
-            -H "Authorization: Bearer ${{ secrets.GROQ_API_KEY }}" || echo "CURL FAILED"
-
       - name: Run agent
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -35,3 +28,12 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: python main.py
+
+      - name: Commit DB back
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p data
+          git add data/news.db || true
+          git diff --staged --quiet || git commit -m "chore: update db [skip ci]"
+          git push || true
