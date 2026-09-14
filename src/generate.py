@@ -1,7 +1,7 @@
 from groq import Groq
 from src.config import GROQ_API_KEY, GROQ_MODEL
 
-client = Groq(api_key=GROQ_API_KEY, base_url="https://api.groq.com/openai/v1")
+client = Groq(api_key=GROQ_API_KEY)
 
 NEWSLETTER_SYSTEM = """You are a tech news curator for venture capital partner.
 Given a list of scored news articles, write a short newsletter intro and format the top 10 as bullet points.

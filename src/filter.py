@@ -2,7 +2,7 @@ import json
 from groq import Groq
 from src.config import GROQ_API_KEY, GROQ_MODEL
 
-client = Groq(api_key=GROQ_API_KEY, base_url="https://api.groq.com/openai/v1")
+client = Groq(api_key=GROQ_API_KEY)
 
 SYSTEM_PROMPT = """You are a news analyst for students (undergrad + grad).
 Given a news headline + summary, decide how much it affects students' careers, education, finances, or future.
