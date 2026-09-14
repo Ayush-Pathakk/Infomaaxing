@@ -13,6 +13,7 @@ GROQ_API_KEY = sanitize_key(os.getenv("GROQ_API_KEY"))
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+print(f"[debug] key_len={len(GROQ_API_KEY) if GROQ_API_KEY else 0}")
 
 DB_PATH = "data/news.db"
 
@@ -32,7 +33,6 @@ RSS_FEEDS = {
 }
 
 GROQ_MODEL = "openai/gpt-oss-120b"
-print(f"[debug] key_len={len(GROQ_API_KEY) if GROQ_API_KEY else 0}")
 GMAIL_USER = os.getenv("GMAIL_USER")
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
 RECIPIENT_EMAIL = os.getenv("RECIPIENT_EMAIL")
