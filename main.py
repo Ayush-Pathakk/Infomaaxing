@@ -3,6 +3,7 @@ from src.fetch import fetch_all
 from src.filter import pick_top_articles
 from src.generate import generate_newsletter
 from src.mailer import send_newsletter
+import sys
 
 def main():
     conn = init_db()
@@ -12,9 +13,9 @@ def main():
     articles = pick_top_articles(conn)
 
     if not articles:
-        print("\nNo articles scored >= 7 today.")
+        print("No articles scored >= 7 today. Exiting with error so workflow fails visibly.")
         conn.close()
-        return
+        sys.exit(1)
 
     print(f"\n>>> Selected {len(articles)} articles for newsletter")
 

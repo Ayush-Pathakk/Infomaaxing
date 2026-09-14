@@ -75,3 +75,40 @@ def pick_top_articles(conn, min_score=7, batch_limit=25, top_n=10):
 
     scored.sort(key=lambda x: x[1], reverse=True)
     return scored[:top_n]
+
+import json
+import time
+from groq import Groq
+from src.config import GROQ_API_KEY, GROQ_MODEL
+
+client = Groq(api_key=GROQ_API_KEY)
+
+# ... SYSTEM_PROMPT, STUDENT_KEYWORDS, SKIP_SOURCES unchanged ...
+
+def keyword_gate(title, summary):
+    text = (title + " " + summary).lower()
+    return any(k in text for k in STUDENT_KEYWORDS)
+
+def score_article(title, summary, retries=3):
+    user_msg = f"Title: {title}\nSummary: {summary[:400]}"
+    for attempt in range(retries):
+        try:
+            resp = client.chat.completions.create(
+                model=GROQ_MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_msg},
+                ],
+                temperature=0.2,
+                response_format={"type": "json_object"},
+            )
+            data = json.loads(resp.choices[0].message.content)
+            return int(data.get("score", 0)), data.get("reason", "")
+        except Exception as e:
+            if attempt < retries - 1:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f"[retry {attempt+1}] {type(e).__name__}, waiting {wait}s")
+                time.sleep(wait)
+            else:
+                print(f"[score fail] {type(e).__name__}: {e}")
+                return 0, "error"
