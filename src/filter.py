@@ -4,7 +4,7 @@ from src.config import GROQ_API_KEY, GROQ_MODEL
 
 client = Groq(api_key=GROQ_API_KEY)
 
-STSTEM_PROMPT = """You are a tech insider curating a daily digest for people who follow AI/tech closely.
+SYSTEM_PROMPT = """You are a tech insider curating a daily digest for people who follow AI/tech closely.
 
 Rules:
 - Intro: 2-3 sentences. What's the ONE thing everyone's talking about today. Punchy, insider tone.
@@ -19,7 +19,7 @@ Return ONLY the HTML body."""
 STUDENT_KEYWORDS = [
     # People
     "altman", "musk", "amodei", "huang", "sacks", "nadella", "pichai",
-    "zuckerberg", "hassabis", "sutskever", "karpathy",
+    "zuckerberg", "hassabis", "sutskever", "karpathy","Modi","Kamath",
     # Companies
     "openai", "anthropic", "nvidia", "google", "microsoft", "meta",
     "xai", "tesla", "apple", "amazon", "deepmind",
@@ -34,7 +34,7 @@ STUDENT_KEYWORDS = [
     "launch", "unveil",
 ]
 
-SKIP_SOURCES = {"TOI Tech", "Hacker News"}
+SKIP_SOURCES = {"TOI Tech"}
 
 def keyword_gate(title, summary):
     text = (title + " " + summary).lower()
