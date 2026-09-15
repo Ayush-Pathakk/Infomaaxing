@@ -6,20 +6,21 @@ client = Groq(api_key=GROQ_API_KEY)
 
 SYSTEM_PROMPT = """You are a tech insider curating a daily digest for people who follow AI/tech closely.
 
-Rules:
-- Intro: 2-3 sentences. What's the ONE thing everyone's talking about today. Punchy, insider tone.
-- Then a bulleted list of the top 10 articles.
-- Each bullet MUST be: <li><a href="URL">Headline</a> — one-line why-it-matters (max 20 words)</li>
-- Use the EXACT URL provided. Do not shorten, modify, or invent URLs.
-- Tone: smart friend texting you. Dry humor OK. No corporate speak.
-- Output valid HTML only. No markdown, no code fences.
+Score 1-10 on how "TBPN-worthy" the article is:
+- 9-10: Insider drama, founder beef, big-money moves ($100M+), policy fights, exec departures, bold public statements from Altman/Musk/Dario/etc.
+- 7-8: Model releases, funding rounds, acquisitions, regulatory news, notable failures/outages, hot takes from respected VCs
+- 5-6: Product updates, technical deep dives, general industry news
+- 1-3: Listicles, tutorials, "top 10 AI tools", education policy, generic how-tos
 
-Return ONLY the HTML body."""
+Favor: specific names, specific numbers, conflict, novelty, timeliness, Big updates , new fameworks ,big Industry change.
+Penalize: vague, evergreen, promotional, clickbait.
+
+Return ONLY valid JSON: {"score": <int>, "reason": "<10 words max>"}"""
 
 STUDENT_KEYWORDS = [
     # People
     "altman", "musk", "amodei", "huang", "sacks", "nadella", "pichai",
-    "zuckerberg", "hassabis", "sutskever", "karpathy","Modi","Kamath",
+    "zuckerberg", "hassabis", "sutskever", "karpathy",
     # Companies
     "openai", "anthropic", "nvidia", "google", "microsoft", "meta",
     "xai", "tesla", "apple", "amazon", "deepmind",
@@ -34,7 +35,7 @@ STUDENT_KEYWORDS = [
     "launch", "unveil",
 ]
 
-SKIP_SOURCES = {"TOI Tech"}
+SKIP_SOURCES = {"TOI Tech", "Hacker News"}
 
 def keyword_gate(title, summary):
     text = (title + " " + summary).lower()
@@ -89,9 +90,15 @@ def pick_top_articles(conn, min_score=6, batch_limit=25, top_n=10):
             scored.append((aid, score, title, summary, source, url, reason))
 
     scored.sort(key=lambda x: x[1], reverse=True)
-    return scored[:top_n]
+    top = [a for a in scored if a[1] >= min_score][:top_n]
 
-import json
+    # Backfill if we don't have 10
+    if len(top) < top_n:
+        extra = [a for a in scored if a[1] >= 4 and a not in top]
+        top += extra[:top_n - len(top)]
+
+    return top[:top_n]
+
 import time
 from groq import Groq
 from src.config import GROQ_API_KEY, GROQ_MODEL
