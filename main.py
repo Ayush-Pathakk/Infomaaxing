@@ -41,6 +41,8 @@ def main():
         for aid, score, title, summary, source, url, reason in articles:
             save_posted(conn, aid, f"[newsletter] {title}", "email")
         print("Done. DB updated.")
+        conn.execute("DELETE FROM posted WHERE posted_at < datetime('now', '-3 days')")
+        conn.commit()
     else:
         print("Send failed. DB not updated.")
 

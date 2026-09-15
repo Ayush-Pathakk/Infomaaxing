@@ -18,20 +18,24 @@ print(f"[debug] key_len={len(GROQ_API_KEY) if GROQ_API_KEY else 0}")
 DB_PATH = "data/news.db"
 
 RSS_FEEDS = {
-    "TechCrunch AI": "https://techcrunch.com/category/artificial-intelligence/feed/",
-    "The Verge AI": "https://www.theverge.com/ai-artificial-intelligence/rss/index.xml",
-    "Ars Technica": "https://arstechnica.com/feed/",
-    "MIT Tech Review AI": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
-    "Wired": "https://www.wired.com/feed/rss",
-    "Economist Sci/Tech": "https://www.economist.com/science-and-technology/rss.xml",
-    "BBC Tech": "https://feeds.bbci.co.uk/news/technology/rss.xml",
-    "BBC Education": "https://feeds.bbci.co.uk/news/education/rss.xml",
-    "Guardian Tech": "https://feeds.theguardian.com/theguardian/technology/rss",
-    "Guardian Education": "https://feeds.theguardian.com/theguardian/education/rss",
-    "Hacker News": "https://hnrss.org/frontpage",
-    "TOI Tech": "https://timesofindia.indiatimes.com/rssfeeds/66949542.cms",
-}
+    # Tier 1 — insider chatter + analysis
+    "Techmeme": "https://www.techmeme.com/feed.xml",
+    "Stratechery": "https://stratechery.com/feed/",
+    "Platformer": "https://www.platformer.news/feed",
+    "Import AI": "https://importai.substack.com/feed",
+    "The Rundown AI": "https://www.therundown.ai/feed",
 
+    # Tier 2 — mainstream AI/tech desks
+    "TechCrunch AI": "https://techcrunch.com/category/artificial-intelligence/feed/",
+    "The Verge AI": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+    "Ars Technica": "https://arstechnica.com/feed/",
+    "Wired": "https://www.wired.com/feed/rss",
+    "MIT Tech Review AI": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+
+    # Tier 3 — aggregators
+    "Hacker News": "https://hnrss.org/frontpage",
+    "Axios Tech": "https://api.axios.com/feed/technology",
+}
 GROQ_MODEL = "openai/gpt-oss-120b"
 GMAIL_USER = os.getenv("GMAIL_USER")
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")

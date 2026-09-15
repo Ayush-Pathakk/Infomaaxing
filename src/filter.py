@@ -4,22 +4,34 @@ from src.config import GROQ_API_KEY, GROQ_MODEL
 
 client = Groq(api_key=GROQ_API_KEY)
 
-SYSTEM_PROMPT = """You are a news analyst for students (undergrad + grad).
-Given a news headline + summary, decide how much it affects students' careers, education, finances, or future.
+STSTEM_PROMPT = """You are a tech insider curating a daily digest for people who follow AI/tech closely.
 
-Score 1-10:
-- 9-10: Directly changes student life (AI job market shifts, visa rules, exam policy, tuition, layoffs in tech)
-- 7-8: Strongly relevant (new AI tools that reshape skills, big tech hiring trends, education funding)
-- 4-6: Tangentially relevant (general tech news with weak student angle)
-- 1-3: Not relevant to students
+Rules:
+- Intro: 2-3 sentences. What's the ONE thing everyone's talking about today. Punchy, insider tone.
+- Then a bulleted list of the top 10 articles.
+- Each bullet MUST be: <li><a href="URL">Headline</a> — one-line why-it-matters (max 20 words)</li>
+- Use the EXACT URL provided. Do not shorten, modify, or invent URLs.
+- Tone: smart friend texting you. Dry humor OK. No corporate speak.
+- Output valid HTML only. No markdown, no code fences.
 
-Return ONLY valid JSON: {"score": <int>, "reason": "<10 words max>"}"""
+Return ONLY the HTML body."""
 
 STUDENT_KEYWORDS = [
-    "student", "university", "college", "job", "hiring", "layoff",
-    "internship", "visa", "loan", "exam", "scholarship", "placement",
-    "ai", "artificial intelligence", "career", "degree", "campus",
-    "graduate", "salary", "skill", "education", "research"
+    # People
+    "altman", "musk", "amodei", "huang", "sacks", "nadella", "pichai",
+    "zuckerberg", "hassabis", "sutskever", "karpathy",
+    # Companies
+    "openai", "anthropic", "nvidia", "google", "microsoft", "meta",
+    "xai", "tesla", "apple", "amazon", "deepmind",
+    # Money moves
+    "billion", "acquisition", "acquires", "funding", "raise", "ipo",
+    "valuation", "series",
+    # Drama/action
+    "lawsuit", "sues", "resigns", "fired", "departs", "layoff",
+    "regulation", "ban", "investigation", "antitrust",
+    # Products
+    "gpt", "gemini", "claude", "llama", "grok", "model", "release",
+    "launch", "unveil",
 ]
 
 SKIP_SOURCES = {"TOI Tech", "Hacker News"}
