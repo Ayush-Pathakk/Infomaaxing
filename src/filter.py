@@ -52,7 +52,7 @@ def pick_top_articles(conn, min_score=6, batch_limit=25, top_n=10):
         SELECT id, title, summary, source, url FROM articles
         WHERE id NOT IN (
             SELECT article_id FROM posted
-            WHERE posted_at >= datetime('now', '-1 day')
+            WHERE posted_at >= datetime('now', '-3 days')
         )
         ORDER BY fetched_at DESC
         LIMIT 100

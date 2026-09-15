@@ -26,4 +26,6 @@ def fetch_all(conn):
             print(f"[FAIL] {source}: {e}")
 
     print(f"\nTotal new articles: {new_count}")
+    conn.execute("DELETE FROM articles WHERE fetched_at < datetime('now', '-2 days')")
+    conn.commit()
     return new_count
