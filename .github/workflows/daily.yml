@@ -2,7 +2,7 @@ name: Daily Newsletter
 
 on:
   schedule:
-    - cron: '30 3 * * *'
+    - cron: '30 3 * * *'    # 9:00 AM IST
   workflow_dispatch:
 
 permissions:

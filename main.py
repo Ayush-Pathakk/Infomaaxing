@@ -29,12 +29,6 @@ def main():
 
     print(f"Newsletter HTML length: {len(html)} chars")
 
-    c = conn.cursor()
-    c.execute("SELECT COUNT(*) FROM posted WHERE posted_at >= datetime('now', '-12 hours')")
-    if c.fetchone()[0] > 0:
-        print("Already sent in last 12h. Skipping.")
-        conn.close()
-        return
 
     print("\n--- Sending email ---")
     if len(articles) < 5:
